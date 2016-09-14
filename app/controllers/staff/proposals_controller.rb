@@ -2,7 +2,7 @@ class Staff::ProposalsController < Staff::ApplicationController
   before_action :enable_staff_program_subnav
   before_action :set_proposal_counts, only: [:index, :show, :selection]
 
-  before_action :require_proposal, only: [:show, :update_state, :update_track, :finalize]
+  before_action :require_proposal, only: [:show, :rate, :update_state, :update_track, :finalize]
 
   decorates_assigned :proposal, with: Staff::ProposalDecorator
 
@@ -44,6 +44,16 @@ class Staff::ProposalsController < Staff::ApplicationController
     render partial: '/staff/proposals/inline_track_edit'
   end
 
+  def rate
+    authorize @proposal
+
+    @rating = @proposal.rate(current_user, rating_params[:score])
+    if @rating.errors.present?
+      logger.warn("Unable to rate proposal [#{@proposal.id}] for user [#{current_user.id}]: #{@rating.errors.full_messages}")
+      render json: @rating.to_json, status: :bad_request
+    end
+  end
+
   def selection
     session[:prev_page] = {name: 'Selection', path: selection_event_staff_program_proposals_path}
 
@@ -72,6 +82,10 @@ class Staff::ProposalsController < Staff::ApplicationController
   end
 
   private
+
+  def rating_params
+    params.require(:rating).permit(:score)
+  end
 
   def send_state_mail(state)
     case state

@@ -98,7 +98,7 @@
         .widget-header
           %h3 Review
         .widget-content
-          = render partial: 'shared/proposals/rating_form', locals: { event: event, proposal: proposal, rating: @rating }
+          = render partial: 'shared/proposals/rating_form', locals: { event: event, proposal: proposal, rating: @rating, blind: false }
 
         - if event.reviewer_tags?
           .widget-header
@@ -115,7 +115,7 @@
           -#  %h3 Slides URL
           -#  = proposal.proposal_data[:slides_url]
 
-        .internal-comments{ style: proposal.internal_comments_style }
+        .internal-comments
           .widget-header
             %i.fa.fa-comments
             %h3= pluralize(proposal.internal_comments.count, 'internal comment')

@@ -1,11 +1,13 @@
 #rating-form
-  - unless proposal.has_speaker?(current_user)
-    = simple_form_for [event, :staff, proposal, rating], remote: true do |f|
+  - blind = true unless local_assigns.has_key?(:blind)
+  - unless proposal.has_speaker?(current_user) && blind
+    - url = blind ? event_staff_proposal_rate_path(event, proposal) : event_staff_program_proposal_rate_path(event, proposal)
+    = simple_form_for rating, url: url, method: :post, remote: true do |f|
       = f.input :score, label: 'Rating', collection: (1..5), include_blank: true,
         input_html: { style: 'width: 60px', onchange: '$(this).trigger("submit.rails");'},
         disabled: proposal.withdrawn?, popover_icon: { content: rating_tooltip }
 
-  - unless rating.new_record?
+  - unless rating.new_record? && blind
     %dl.dl-horizontal.ratings_list.margin-top
       - proposal.ratings.each do |rating|
         %dt= "#{rating.user.name}:"

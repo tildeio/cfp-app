@@ -104,13 +104,10 @@ class User < ActiveRecord::Base
     teammates.program_team.for_event(event).size > 0
   end
 
-  def rating_for(proposal, build_new = true)
-    rating = ratings.detect { |r| r.proposal_id == proposal.id }
-    if rating
-      rating
-    elsif build_new
-      ratings.build(proposal: proposal)
-    end
+  def rating_for(proposal, build_new=true)
+    rating = ratings.find_by(proposal: proposal)
+    return rating if rating
+    return ratings.build(proposal: proposal) if build_new
   end
 
   def role_names

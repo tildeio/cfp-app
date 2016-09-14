@@ -12,6 +12,14 @@ class ProposalPolicy < ApplicationPolicy
     @user.staff_for?(@current_event) && !@record.has_speaker?(@user)
   end
 
+  def reviewer_rate?
+    @user.staff_for?(@current_event) && !@record.has_speaker?(@user)
+  end
+
+  def rate?
+    @user.staff_for?(@current_event)
+  end
+
   def update_state?
     @user.program_team_for_event?(@current_event)
   end

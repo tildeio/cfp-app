@@ -44,9 +44,24 @@ class Staff::ProposalReviewsController < Staff::ApplicationController
     end
   end
 
+  def rate
+    authorize @proposal, :reviewer_rate?
+
+    @rating = @proposal.rate(current_user, rating_params[:score])
+    if @rating.errors.present?
+      logger.warn("Unable to rate proposal [#{@proposal.id}] for user [#{current_user.id}]: #{@rating.errors.full_messages}")
+      render json: @rating.to_json, status: :bad_request
+    end
+  end
+
   private
 
   def proposal_review_tags_params
     params.fetch(:proposal, {}).permit({review_tags: []})
   end
+
+  def rating_params
+    params.require(:rating).permit(:score)
+  end
+
 end

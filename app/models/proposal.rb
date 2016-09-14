@@ -147,6 +147,17 @@ class Proposal < ActiveRecord::Base
     uuid
   end
 
+  def rate(user, score)
+    rating = user.rating_for(self)
+    if rating.persisted? && score.blank?
+      return rating.destroy ? user.ratings.build(proposal: self) : rating
+    end
+
+    rating.score = score
+    rating.save
+    rating
+  end
+
   def average_rating
     return nil if ratings.empty?
     ratings.map(&:score).inject(:+).to_f / ratings.size
