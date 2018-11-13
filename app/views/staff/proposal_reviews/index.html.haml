@@ -58,7 +58,7 @@
           %th Track
           %th Proposal<br/>Tags
           %th Reviewer<br/>Tags
-          %th Internal Comments
+          %th Public Comments
           %th Submitted On
           %th Updated At
       %tbody
@@ -82,7 +82,7 @@
             %td.review-tags
               = proposal.review_tags_labels
             %td.comment-count
-              = proposal.internal_comments.count
+              = proposal.public_comments.count
             %td.created-at
               = proposal.created_at
             %td.updated-at
