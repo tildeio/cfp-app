@@ -17,4 +17,4 @@
               %strong Tags:
               %span #{proposal.tags_labels}
       %br
-      = render partial: 'proposals/contents', locals: { proposal: proposal }
+      = render partial: 'proposals/contents', locals: { proposal: proposal, blind: true }
