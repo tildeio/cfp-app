@@ -26,8 +26,6 @@ bin/setup
 
 This will create `.env`, a development database with seed data. Seed will make an admin user with an email of `an@admin.com` to get started. There is a special, development only login method in Omniauth that you can use to test it out.
 
-NOTE: You may need to install Qt/`qmake` to get Capybara to work; with Homebrew you can run `brew install qt@5.5`. Then run instead as `PATH="$(brew --prefix qt@5.5)/bin:$PATH" bin/setup`.
-
 Start the server:
 
 ```bash

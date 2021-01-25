@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
-ruby '2.3.4'
+ruby '2.7.2'
 
 gem 'rails', '5.0.5'
-gem 'puma', '~> 3.6.2'
+gem 'puma', '~> 4.0'
 
 gem 'pg'
 
@@ -16,7 +16,7 @@ gem 'bootstrap-sass', '~> 3.3.6'
 gem 'rails-assets-momentjs', source: 'https://rails-assets.org'
 gem 'selectize-rails'
 
-gem 'devise', '~> 4.1.1'
+gem 'devise', '~> 4.1'
 gem 'omniauth-github'
 gem 'omniauth-twitter'
 
@@ -54,7 +54,8 @@ end
 
 group :development, :test do
   gem 'capybara'
-  gem 'capybara-webkit' # Local QT install req'd (`brew install qt`)
+  gem 'webdrivers', require: false
+
   gem 'database_cleaner'
   gem 'dotenv-rails'
   gem 'factory_girl_rails'
