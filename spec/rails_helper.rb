@@ -5,6 +5,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'
 require 'pundit/rspec'
+require 'webdrivers/chromedriver'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -19,16 +20,20 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
-RSpec.configure do |config|
-  Capybara.javascript_driver = :webkit
-
-  Capybara::Webkit.configure do |config|
-    config.block_unknown_urls
-    config.allow_url("127.0.0.1")
-    config.allow_url("localhost")
-    config.allow_url("example.com")
+Capybara.register_driver :headless_chrome do |app|
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.args << '--headless'
+    opts.args << '--window-size=1920,1080'
+    opts.args << '--disable-gpu' if Gem.win_platform?
   end
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+end
 
+RSpec.configure do |config|
+  # Previously with Capybara::Webkit every URL was blocked except
+  # localhost and example.com. It doesn't seem we can do this with
+  # headless Chrome.
+  Capybara.javascript_driver = :headless_chrome
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
@@ -44,6 +49,8 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_base_class_for_anonymous_controllers = false
+
+  config.example_status_persistence_file_path = "spec/examples.txt"
 
   config.include FactoryGirl::Syntax::Methods
 

@@ -1,0 +1,38 @@
+name: Main
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:9.6
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/events-api_test
+      RAILS_ENV: test
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: gems-${{ hashFiles('Gemfile.lock') }}
+        restore-keys: gems-
+    - name: Bundle install
+      run: |
+        bundle config path vendor/bundle
+        bundle install --jobs 4 --retry 3 --frozen
+    - name: Set Up Database
+      run: bundle exec rails db:create db:schema:load
+    - name: Run specs
+      run: bundle exec rake

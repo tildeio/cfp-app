@@ -21,6 +21,7 @@ feature "Organizers can manage program sessions" do
       page.accept_confirm do
         find('tr', text: waitlisted_session.title).click_link("Promote")
       end
+      expect(page).to have_content("successfully promoted")
 
       expect(waitlisted_session.reload.state).to eq(ProgramSession::LIVE)
     end
@@ -30,6 +31,7 @@ feature "Organizers can manage program sessions" do
       page.accept_confirm do
         click_link("Promote")
       end
+      expect(page).to have_content("successfully promoted")
 
       expect(waitlisted_session.reload.state).to eq(ProgramSession::LIVE)
     end
@@ -92,7 +94,9 @@ feature "Organizers can manage program sessions" do
     visit edit_event_staff_program_session_path(event, program_session)
     page.accept_confirm { click_on "Delete Program Session" }
 
+    expect(page).to have_content("successfully deleted")
     expect(current_path).to eq(event_staff_program_sessions_path(event))
+
     expect(page).not_to have_content(program_session.title)
     expect(event.speakers).not_to include(speaker)
   end
@@ -104,7 +108,9 @@ feature "Organizers can manage program sessions" do
     visit edit_event_staff_program_session_path(event, program_session_two)
     page.accept_confirm { click_on "Delete Program Session" }
 
+    expect(page).to have_content("successfully deleted")
     expect(current_path).to eq(event_staff_program_sessions_path(event))
+
     expect(page).not_to have_content(program_session_two.title)
     expect(event.speakers).to include(speaker)
     expect(event.proposals).to include(speaker.proposal)
