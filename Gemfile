@@ -62,7 +62,7 @@ group :development, :test do
   gem 'growl'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'guard-livereload', '~> 2.1.1'
+  gem 'guard-livereload', '~> 2.5.2'
   gem 'rspec'
   gem 'rspec-rails'
   gem 'rails-controller-testing'
