@@ -49,7 +49,7 @@ group :development do
   gem 'rack-mini-profiler'
   gem 'haml-rails'
   gem 'spring-commands-rspec', require: false
-  gem 'web-console', '~> 2.0'
+  gem 'web-console', '~> 3.7'
 end
 
 group :development, :test do
